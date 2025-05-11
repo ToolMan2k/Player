@@ -4667,6 +4667,10 @@ bool Game_Interpreter::CommandManiacControlVarArray(lcf::rpg::EventCommand const
 		return true;
 	}
 
+	for (int z = 0; z < com.parameters.size(); z++) {
+		Output::Info("Param {} is {}", z, com.parameters[z]);
+	}
+
 	int op = com.parameters[0];
 	int mode = com.parameters[1];
 
@@ -4674,6 +4678,7 @@ bool Game_Interpreter::CommandManiacControlVarArray(lcf::rpg::EventCommand const
 	int length = ValueOrVariableBitfield(mode, 1, com.parameters[3]);
 	int target_b = ValueOrVariableBitfield(mode, 2, com.parameters[4]);
 	int last_target_a = target_a + length - 1;
+	int last_target_b = target_b + length - 1;
 
 	if (target_a < 1 || length <= 0) {
 		return true;
@@ -4745,6 +4750,21 @@ bool Game_Interpreter::CommandManiacControlVarArray(lcf::rpg::EventCommand const
 		case 15:
 			// Shift right
 			Main_Data::game_variables->BitShiftRightArray(target_a, last_target_a, target_b);
+			break;
+		case 16:
+			// Deference (unimplemented)
+			Output::Warning("ManiacControlVarArray: Deference operation {} not implemented", op);
+		case 17:
+			// Sort asc with copy
+			Main_Data::game_variables->SortRangeCopy(target_a, last_target_a, target_b, last_target_b, true);
+			break;
+		case 18:
+			// Sort desc with copy
+			Main_Data::game_variables->SortRangeCopy(target_a, last_target_a, target_b, last_target_b, false);
+			break;
+		case 19:
+			// Shuffle with copy
+			Main_Data::game_variables->ShuffleRangeCopy(target_a, last_target_a, target_b, last_target_b);
 			break;
 		default:
 			Output::Warning("ManiacControlVarArray: Unknown operation {}", op);

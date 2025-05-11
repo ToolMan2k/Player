@@ -525,8 +525,11 @@ void Game_Variables::SortRangeCopy(int first_id, int last_id, int copy_first_id,
 	if (i < last_id && j < copy_last_id) {
 		// Create vector
 		for (i; i < last_id; ++i) {
-			v.push_back(std::make_pair(int vv[i], int vv[j]));
+			v.push_back(std::make_pair(vv[i], vv[j]));
 			++j;
+		}
+		for (int z = 0; z < v.size(); z++) {
+			Output::Info("Value is {} and {}", v[i].first, v[i].second);
 		}
 		// Sort first row of vectors,
 		auto sorter = [&](auto&& fn) {
@@ -542,7 +545,7 @@ void Game_Variables::SortRangeCopy(int first_id, int last_id, int copy_first_id,
 		j = std::max(0, copy_first_id - 1);
 		for (auto l : v) {
 			vv[i] << l.first;
-			vv[k] << l.second;
+			vv[j] << l.second;
 			i++;
 			j++;
 		}
@@ -567,8 +570,9 @@ void Game_Variables::ShuffleRangeCopy(int first_id, int last_id, int copy_first_
 	int i = std::max(0, first_id - 1);
 	int j = std::max(0, copy_first_id - 1);
 	for (i; i < last_id; ++i) {
-		v.push_back(std::make_pair(int vv[i], int vv[j]));
+		v.push_back(std::make_pair(vv[i], vv[j]));
 		++j;
+
 	}
 	for (int i = std::max(0, first_id - 1); i < last_id; ++i) {
 		int rnd_num = Rand::GetRandomNumber(first_id, last_id) - 1;
@@ -579,7 +583,7 @@ void Game_Variables::ShuffleRangeCopy(int first_id, int last_id, int copy_first_
 	j = std::max(0, copy_first_id - 1);
 	for (auto l : v) {
 		vv[i] << l.first;
-		vv[k] << l.second;
+		vv[j] << l.second;
 		i++;
 		j++;
 	}
