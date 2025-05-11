@@ -515,12 +515,73 @@ void Game_Variables::SortRange(int first_id, int last_id, bool asc) {
 	}
 }
 
+void Game_Variables::SortRangeCopy(int first_id, int last_id, int copy_first_id, int copy_last_id, bool asc) {
+	PrepareRange(first_id, last_id, "Invalid write sort(var[{},{}])!");
+	PrepareRange(copy_first_id, copy_last_id, "Invalid write sort(var[{},{}])!");
+	auto& vv = _variables;
+	std::vector<std::pair<int,int>> v;
+	int i = std::max(0, first_id - 1);
+	int j = std::max(0, copy_first_id - 1);
+	if (i < last_id && j < copy_last_id) {
+		// Create vector
+		for (i; i < last_id; ++i) {
+			v.push_back(std::make_pair(int vv[i], int vv[j]));
+			++j;
+		}
+		// Sort first row of vectors,
+		auto sorter = [&](auto&& fn) {
+			std::stable_sort(v.begin() + i, v.begin() + last_id, fn);
+		};
+		if (asc) {
+			sorter(std::less<>());
+		} else {
+			sorter(std::greater<>());
+		}
+		// Save vector
+		i = std::max(0, first_id - 1);
+		j = std::max(0, copy_first_id - 1);
+		for (auto l : v) {
+			vv[i] << l.first;
+			vv[k] << l.second;
+			i++;
+			j++;
+		}
+	}
+}
+
 void Game_Variables::ShuffleRange(int first_id, int last_id) {
 	PrepareRange(first_id, last_id, "Invalid write shuffle(var[{},{}])!");
 	auto& vv = _variables;
 	for (int i = std::max(0, first_id - 1); i < last_id; ++i) {
 		int rnd_num = Rand::GetRandomNumber(first_id, last_id) - 1;
 		std::swap(vv[i], vv[rnd_num]);
+	}
+}
+
+void Game_Variables::ShuffleRangeCopy(int first_id, int last_id, int copy_first_id, int copy_last_id) {
+	PrepareRange(first_id, last_id, "Invalid write shuffle(var[{},{}])!");
+	PrepareRange(copy_first_id, copy_last_id, "Invalid write shuffle(var[{},{}])!");
+	auto& vv = _variables;
+	std::vector<std::pair<int,int>> v;
+	// Create vector
+	int i = std::max(0, first_id - 1);
+	int j = std::max(0, copy_first_id - 1);
+	for (i; i < last_id; ++i) {
+		v.push_back(std::make_pair(int vv[i], int vv[j]));
+		++j;
+	}
+	for (int i = std::max(0, first_id - 1); i < last_id; ++i) {
+		int rnd_num = Rand::GetRandomNumber(first_id, last_id) - 1;
+		std::swap(v[i], v[rnd_num]);
+	}
+	// Save vector
+	i = std::max(0, first_id - 1);
+	j = std::max(0, copy_first_id - 1);
+	for (auto l : v) {
+		vv[i] << l.first;
+		vv[k] << l.second;
+		i++;
+		j++;
 	}
 }
 

@@ -114,6 +114,8 @@ public:
 	void EnumerateRange(int first_id, int last_id, Var_t value);
 	void SortRange(int first_id, int last_id, bool asc);
 	void ShuffleRange(int first_id, int last_id);
+	void SortRangeCopy(int first_id, int last_id, int copy_first_id, int copy_last_id, bool asc);
+	void ShuffleRangeCopy(int first_id, int last_id, int copy_first_id, int copy_last_id);
 
 	void SetArray(int first_id_a, int last_id_a, int first_id_b);
 	void AddArray(int first_id_a, int last_id_a, int first_id_b);
